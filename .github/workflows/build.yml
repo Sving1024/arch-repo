@@ -111,7 +111,8 @@ jobs:
           python-cyaron,
           python-cyaron-git,
           python-xeger,
-          python-xeger-git
+          python-xeger-git,
+          visual-studio-code-insiders-bin 
         ]
       fail-fast: false
       
