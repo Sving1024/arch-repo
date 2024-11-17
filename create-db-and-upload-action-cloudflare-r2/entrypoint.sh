@@ -9,7 +9,7 @@ if [ ! -f ~/.config/rclone/rclone.conf ]; then
     mkdir --parents ~/.config/rclone
     echo "[R2]" >> ~/.config/rclone/rclone.conf
     echo "type = s3" >> ~/.config/rclone/rclone.conf
-
+    echo "provider = Cloudflare" >> ~/.config/rclone/rclone.conf
     echo "access_key_id=$RCLONE_S3_ACCESS_KEY_ID" >> ~/.config/rclone/rclone.conf
     echo "secret_access_key=$RCLONE_S3_SECRET_KEY" >> ~/.config/rclone/rclone.conf
     echo "endpoint=$RCLONE_S3_ENDPOINT" >> ~/.config/rclone/rclone.conf
