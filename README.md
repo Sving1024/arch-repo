@@ -6,18 +6,12 @@ The uploadToOneDrive job is optional, you can use [urepo](https://github.com/vif
 # Usage
 The packages are located at OneDrive and GitHub releases, choose one of you like.
 
-Add the following code snippet to your `/etc/pacman.conf` (choose one):
+Add the following code snippet to your `/etc/pacman.conf`:
 
 ```
 # Download from OneDrive
-[vifly]
-Server = https://archrepo.viflythink.com
-```
-
-```
-# Download from GitHub releases
-[vifly]
-Server = https://github.com/vifly/arch-build/releases/latest/download
+[archlinux-sving1024]
+Server = https://repo.sving1024.top/api/raw?path=/
 ```
 
 Then, run `sudo pacman -Syu` to update repository and upgrade system.
