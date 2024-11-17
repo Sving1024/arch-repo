@@ -1,16 +1,10 @@
 name: 'Generate Arch Repo database and upload'
 inputs:
-  RCLONE_ONEDRIVE_CLIENT_ID:
+  RCLONE_S3_ACCESS_KEY_ID:
     required: true
-  RCLONE_ONEDRIVE_CLIENT_SECRET:
+  RCLONE_S3_SECRET_KEY:
     required: true
-  RCLONE_ONEDRIVE_REGION:
-    required: true
-  RCLONE_ONEDRIVE_TOKEN:
-    required: true
-  RCLONE_ONEDRIVE_DRIVE_ID:
-    required: true
-  RCLONE_ONEDRIVE_DRIVE_TYPE:
+  RCLONE_S3_ENDPOINT:
     required: true
   dest_path:
     required: true
@@ -25,12 +19,9 @@ runs:
   image: 'Dockerfile'
   
   env:
-    RCLONE_ONEDRIVE_CLIENT_ID: ${{ inputs.RCLONE_ONEDRIVE_CLIENT_ID }}
-    RCLONE_ONEDRIVE_CLIENT_SECRET: ${{ inputs.RCLONE_ONEDRIVE_CLIENT_SECRET }}
-    RCLONE_ONEDRIVE_REGION: ${{ inputs.RCLONE_ONEDRIVE_REGION }}
-    RCLONE_ONEDRIVE_TOKEN: ${{ inputs.RCLONE_ONEDRIVE_TOKEN }}
-    RCLONE_ONEDRIVE_DRIVE_ID: ${{ inputs.RCLONE_ONEDRIVE_DRIVE_ID }}
-    RCLONE_ONEDRIVE_DRIVE_TYPE: ${{ inputs.RCLONE_ONEDRIVE_DRIVE_TYPE }}
+    RCLONE_S3_ACCESS_KEY_ID: ${{ inputs.RCLONE_S3_ACCESS_KEY_ID }}
+    RCLONE_S3_SECRET_KEY: ${{ inputs.RCLONE_S3_SECRET_KEY }}
+    RCLONE_S3_ENDPOINT: ${{ inputs.RCLONE_S3_ENDPOINT }}
     dest_path: ${{ inputs.dest_path }}
     repo_name: ${{ inputs.repo_name }}
     gpg_key: ${{ inputs.gpg-privatekey }}
