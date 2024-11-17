@@ -191,7 +191,7 @@ jobs:
           RCLONE_S3_ACCESS_KEY_ID: ${{ secrets.RCLONE_S3_ACCESS_KEY_ID }}
           RCLONE_S3_ENDPOINT: ${{ secrets.RCLONE_S3_ENDPOINT }}
           RCLONE_S3_SECRET_KEY: ${{secrets.RCLONE_S3_SECRET_KEY_ID}}
-          dest_path: /repo/archlinux/repo
+          dest_path: /repo/archlinux/
           repo_name: archlinux-sving1024
           gpg-privatekey: ${{ secrets.gpg_private_key }}
           local_path: ${{ steps.download.outputs.download-path }}
