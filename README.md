@@ -1,20 +1,23 @@
 Use GitHub Actions to build Arch packages.
 For more information, please read [my post](https://viflythink.com/Use_GitHubActions_to_build_AUR/) (Chinese).
 
-The uploadToOneDrive job is optional, you can use [urepo](https://github.com/vifly/urepo) to create your package repositorie after upload to OneDrive.
+The uploadToOneDrive job is optional, you can use [urepo](https://github.com/vifly/urepo) to create your package repositories after uploading to OneDrive.
 
 # Usage
-The packages are located at OneDrive and GitHub releases, choose one of you like.
+The packages are located at OneDrive and Cloudflare R2 Storage, choose one of you like.
 
 Add the following code snippet to your `/etc/pacman.conf`:
 
 ```
-# Download from OneDrive
 [archlinux-sving1024]
-Server = https://repo.sving1024.top/api/raw?path=/
+#Cloudflare R2
+Server = https://repo.sving1024.top/archlinux/
+#Onedrive
+Server = https://repo-vercel.sving1024.top/
+Server = https://repo-onedrive.sving1024.top/api/raw?path=/
 ```
 
-Then, run `sudo pacman -Syu` to update repository and upgrade system.
+Then, run `sudo pacman -Syu` to update the repository and upgrade the system.
 
 Now you can use `sudo pacman -S <pkg_name>` to install packages from my repository.
 
