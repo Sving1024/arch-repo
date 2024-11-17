@@ -132,12 +132,12 @@ jobs:
         name: ${{ matrix.repos }}
         if-no-files-found: error
         
-    - uses: ncipollo/release-action@v1
-      with:
-        allowUpdates: true
-        tag: "packages"
-        artifacts: "./*/*.zst"
-        token: ${{ secrets.GITHUB_TOKEN }}
+#    - uses: ncipollo/release-action@v1
+#      with:
+#        allowUpdates: true
+#        tag: "packages"
+#        artifacts: "./*/*.zst"
+#        token: ${{ secrets.GITHUB_TOKEN }}
           
   uploadToOneDrive:      
     runs-on: ubuntu-latest
@@ -166,12 +166,12 @@ jobs:
           gpg-privatekey: ${{ secrets.gpg_private_key }}
           local_path: ${{ steps.download.outputs.download-path }}
 
-      - uses: ncipollo/release-action@v1
-        with:
-          allowUpdates: true
-          tag: "packages"
-          artifacts: "./upload_packages/*.sig,./upload_packages/*.files,./upload_packages/*.db,./upload_packages/*.tar.gz"
-          token: ${{ secrets.GITHUB_TOKEN }}
+#      - uses: ncipollo/release-action@v1
+#        with:
+#          allowUpdates: true
+#          tag: "packages"
+#          artifacts: "./upload_packages/*.sig,./upload_packages/*.files,./upload_packages/*.db,./upload_packages/*.tar.gz"
+#          token: ${{ secrets.GITHUB_TOKEN }}
   uploadToR2:      
     runs-on: ubuntu-latest
     if: always()
@@ -195,10 +195,3 @@ jobs:
           repo_name: archlinux-sving1024
           gpg-privatekey: ${{ secrets.gpg_private_key }}
           local_path: ${{ steps.download.outputs.download-path }}
-
-      - uses: ncipollo/release-action@v1
-        with:
-          allowUpdates: true
-          tag: "packages"
-          artifacts: "./upload_packages/*.sig,./upload_packages/*.files,./upload_packages/*.db,./upload_packages/*.tar.gz"
-          token: ${{ secrets.GITHUB_TOKEN }}

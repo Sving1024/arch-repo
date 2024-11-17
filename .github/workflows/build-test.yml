@@ -1,4 +1,4 @@
-name: BUILD
+name: BUILD-test-R2
 
 on:
   workflow_dispatch:
