@@ -37,11 +37,7 @@ jobs:
   uploadToCloudStorage:      
     runs-on: ubuntu-latest
     if: always()
-    needs: [buildAUR]
-    strategy:
-      matrix:
-        config_name: [ R2,onedrive ]
-    
+    needs: [buildAUR]    
     steps:
       - uses: actions/checkout@v4
         with: 
@@ -55,7 +51,7 @@ jobs:
       - uses: ./create-db-and-upload-action-general
         with:
           RCLONE_CONFIG: ${{ secrets.RCLONE_CONFIG }}
-          RCLONE_CONFIG_NAME: ${{matrix.config_name}}
+          RCLONE_CONFIG_NAME: "onedrive"
           dest_path: /repo/archlinux/
           repo_name: archlinux-sving1024
           gpg-privatekey: ${{ secrets.gpg_private_key }}
