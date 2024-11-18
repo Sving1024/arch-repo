@@ -50,7 +50,7 @@ jobs:
       
       - uses: ./create-db-and-upload-action-general
         with:
-          RCLONE_CONFIG: ${{ secrets.RCLONE_CONFIG }}
+          RCLONE_CONFIG_CONTENT: ${{ secrets.RCLONE_CONFIG }}
           RCLONE_CONFIG_NAME: "onedrive"
           dest_path: /repo/archlinux/
           repo_name: archlinux-sving1024
