@@ -22,7 +22,7 @@ fi
 cd upload_packages || exit 1
 
 repo-add "./${repo_name:?}.db.tar.gz" ./*.tar.zst
-python3 $init_path/create-db-and-upload-action/sync.py
+python3 $init_path/create-db-and-upload-action-cloudflare-r2/sync.py
 rm "./${repo_name:?}.db.tar.gz"
 rm "./${repo_name:?}.files.tar.gz"
 
