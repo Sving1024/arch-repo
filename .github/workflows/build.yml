@@ -1,7 +1,6 @@
 name: BUILD
 
 on:
-  push:
   schedule:
     -  cron: '0 2,14 * * *'
   workflow_dispatch:
