@@ -48,7 +48,7 @@ jobs:
       - name: Display structure of downloaded files
         run: ls -R ${{ steps.download.outputs.download-path }}
       
-      - uses: ./create-db-and-upload-action-general
+      - uses: ./create-db-and-upload-action
         with:
           RCLONE_CONFIG_CONTENT: ${{ secrets.RCLONE_CONFIG }}
           dest_path: /repo/archlinux/
