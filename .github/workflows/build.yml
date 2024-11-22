@@ -133,7 +133,7 @@ jobs:
   uploadToR2:
     strategy:
       matrix:
-        remote: [ onedrive, r2 , webdav]
+        remote: [ onedrive, r2 ]
     runs-on: ubuntu-latest
     if: always()
     needs: [buildAUR]
