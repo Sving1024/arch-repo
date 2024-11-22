@@ -17,17 +17,11 @@ Server = https://repo-vercel.sving1024.top/
 Server = https://repo-onedrive.sving1024.top/api/raw?path=/
 ```
 
-```
-# Download from GitHub releases
-[vifly]
-Server = https://github.com/vifly/arch-build/releases/latest/download
-```
-
 And import my pubkey:
 
 ```Bash
-wget -O /tmp/vifly-repo.key 'https://share.viflythink.com/arch-repo.key' && sudo pacman-key --add /tmp/vifly-repo.key
-sudo pacman-key --lsign-key viflythink@gmail.com
+sudo pacman-key --recv-keys B3D5A089ABA053169C5FED50E3B24814F9927AFB 
+sudo pacman-key --lsign-key sving1024@outlook.com 
 ```
 
 Then, run `sudo pacman -Syu` to update the repository and upgrade the system.
