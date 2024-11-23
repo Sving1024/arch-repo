@@ -1,21 +1,24 @@
 #!/usr/bin/python3
 
-import subprocess
+import asyncio
+import asyncio.taskgroups
 import os
 import tarfile
 import shutil
 import glob
-import pyalpm
 from typing import NamedTuple
 from contextlib import suppress
+import pyalpm
 
 REPO_NAME = os.environ["repo_name"]
 ROOT_PATH = os.environ["dest_path"]
 CONFIG_NAME = os.environ.get("RCLONE_CONFIG_NAME", "")
 
 if CONFIG_NAME == "":
-    result = subprocess.run(["rclone", "listremotes"], capture_output=True)
-    CONFIG_NAME = result.stdout.decode().split("\n")[0]
+    remotes = asyncio.run(
+        asyncio.create_subprocess_exec("rclone", "listremotes", capture_output=True)
+    )
+    CONFIG_NAME = remotes.stdout.decode().split("\n")[0]
 if not CONFIG_NAME.endswith(":"):
     CONFIG_NAME = CONFIG_NAME + ":"
 
@@ -23,10 +26,45 @@ if ROOT_PATH.startswith("/"):
     ROOT_PATH = ROOT_PATH[1:]
 
 
+class remote:
+    config_name: str
+
+    def __init__(self, confg_name: str) -> None:
+        self.config_name = confg_name
+
+    async def delete(self, name: str):
+        print(f"removing {name}")
+        res = await asyncio.create_subprocess_exec(
+            "rclone",
+            "delete",
+            f"{self.config_name}/{ROOT_PATH}/{name}",
+            stdout=asyncio.subprocess.PIPE,
+            stderr=asyncio.subprocess.PIPE,
+        )
+        if res.returncode != 0:
+            raise RuntimeError(res.stderr.decode())
+        print(f"complete removing {name}")
+
+    async def download(self, name: str, dest_path: str = "./"):
+        res = await asyncio.create_subprocess_exec(
+            "rclone",
+            "copy",
+            f"{CONFIG_NAME}/{ROOT_PATH}/{name}",
+            dest_path,
+            stdout=asyncio.subprocess.PIPE,
+            stderr=asyncio.subprocess.PIPE,
+        )
+        if res.returncode != 0:
+            raise RuntimeError(res.stderr.decode())
+
+
 class PkgInfo(NamedTuple):
     filename: str
     pkgname: str
     version: str
+
+
+storage = remote(CONFIG_NAME)
 
 
 def get_pkg_infos(file_path: str) -> list["PkgInfo"]:
@@ -62,31 +100,6 @@ def get_pkg_infos(file_path: str) -> list["PkgInfo"]:
     return pkg_infos
 
 
-def rclone_delete(name: str):
-    r = subprocess.run(
-        ["rclone", "delete", f"{CONFIG_NAME}/{ROOT_PATH}/{name}"],
-        stdout=subprocess.PIPE,
-        stderr=subprocess.PIPE,
-    )
-    if r.returncode != 0:
-        raise RuntimeError(r.stderr.decode())
-
-
-def rclone_download(name: str, dest_path: str = "./"):
-    r = subprocess.run(
-        [
-            "rclone",
-            "copy",
-            f"{CONFIG_NAME}/{ROOT_PATH}/{name}",
-            dest_path,
-        ],
-        stdout=subprocess.PIPE,
-        stderr=subprocess.PIPE,
-    )
-    if r.returncode != 0:
-        raise RuntimeError(r.stderr.decode())
-
-
 def get_old_packages(
     local_packages: list["PkgInfo"], remote_packages: list["PkgInfo"]
 ) -> list["PkgInfo"]:
@@ -113,33 +126,41 @@ def download_local_miss_files(
     for r in remote_new_files:
         if r not in local_files and ".db" not in r and ".files" not in r:
             with suppress(RuntimeError):
-                rclone_download(r)
+                storage.download(r)
 
 
-if __name__ == "__main__":
-    r = subprocess.run(
-        ["rclone", "size", f"{CONFIG_NAME}/{ROOT_PATH}/{REPO_NAME}.db.tar.gz"],
-        stderr=subprocess.PIPE,
-        stdout=subprocess.PIPE,
+async def run():
+    result = asyncio.run(
+        asyncio.create_subprocess_exec(
+            "rclone",
+            "size",
+            f"{CONFIG_NAME}/{ROOT_PATH}/{REPO_NAME}.db.tar.gz",
+            stderr=asyncio.subprocess.PIPE,
+            stdout=asyncio.subprocess.PIPE,
+        )
     )
-    if r.returncode != 0 or "Total size: 0" in r.stdout.decode():
+    if result.returncode != 0 or "Total size: 0" in result.stdout.decode():
         print("Remote database file is not exist!")
         print(
             "If you are running this script for the first time, you can ignore this error."
         )
-        print(r.stderr.decode())
+        print(result.stderr.decode())
         exit(0)
 
     local_packages = get_pkg_infos(f"./{REPO_NAME}.db.tar.gz")
 
-    rclone_download(f"{REPO_NAME}.db.tar.gz", "/tmp/")
+    storage.download(f"{REPO_NAME}.db.tar.gz", "/tmp/")
     remote_packages = get_pkg_infos(f"/tmp/{REPO_NAME}.db.tar.gz")
 
     old_packages = get_old_packages(local_packages, remote_packages)
-    for i in old_packages:
-        print(f"delete {CONFIG_NAME} {i.filename}")
-        rclone_delete(i.filename)
-        with suppress(RuntimeError):
-            rclone_delete(i.filename + ".sig")
+    async with asyncio.TaskGroup() as tg:
+        for i in old_packages:
+            tg.create_task(storage.delete(i.filename))
+            with suppress(RuntimeError):
+                tg.create_task(storage.delete(i.filename + ".sig"))
 
     download_local_miss_files(local_packages, remote_packages, old_packages)
+
+
+if __name__ == "__main__":
+    asyncio.run(run())
