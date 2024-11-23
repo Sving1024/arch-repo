@@ -122,13 +122,7 @@ if __name__ == "__main__":
         stderr=subprocess.PIPE,
         stdout=subprocess.PIPE,
     )
-<<<<<<< HEAD
-    if (r.returncode != 0) | (
-        r.stdout == b"Total objects: 0\nTotal size: 0 B (0 Byte)\n"
-    ):
-=======
     if r.returncode != 0 or "Total size: 0" in r.stdout.decode():
->>>>>>> f1c3212488ea96f044c427f4886c4b83ca9584a6
         print("Remote database file is not exist!")
         print(
             "If you are running this script for the first time, you can ignore this error."
