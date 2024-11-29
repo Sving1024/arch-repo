@@ -28,6 +28,8 @@ Then, run `sudo pacman -Syu` to update the repository and upgrade the system.
 
 Now you can use `sudo pacman -S <pkg_name>` to install packages from my repository.
 
+You may also want to use [archlinuxcn](https://github.com/archlinuxcn/repo) with the repo together. Some of the dependencies are provided in the repo.
+
 # TODO
 - [ ] some actions are too coupled, need to refactor
 - [ ] add more clear output log for debug
