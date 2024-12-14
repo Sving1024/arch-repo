@@ -20,8 +20,7 @@ Server = https://repo-onedrive.sving1024.top/api/raw?path=/
 And import my pubkey:
 
 ```Bash
-sudo pacman-key --recv-keys B3D5A089ABA053169C5FED50E3B24814F9927AFB 
-sudo pacman-key --lsign-key sving1024@outlook.com 
+sudo pacman-key --recv-keys B3D5A089ABA053169C5FED50E3B24814F9927AFB $$ sudo pacman-key --lsign-key sving1024@outlook.com 
 ```
 
 Then, run `sudo pacman -Syu` to update the repository and upgrade the system.
