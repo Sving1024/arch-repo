@@ -1,3 +1,5 @@
+This repo is not used any more. All the actions are transferred to [PKGBUILD](https://github.com/Sving1024/PKGBUILD).
+
 Use GitHub Actions to build Arch packages.
 For more information, please read [my post](https://viflythink.com/Use_GitHubActions_to_build_AUR/) (Chinese).
 
