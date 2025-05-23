@@ -10,7 +10,6 @@ jobs:
     
     steps:
     - uses: actions/checkout@v4
-    
     - name: Makepkg Build and Check (Unmaintained)
       uses: edlanglois/pkgbuild-action@v1.1.9
       with: 

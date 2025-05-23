@@ -1,7 +1,7 @@
 pkgbase = pandoc-cli
 	pkgdesc = Conversion between documentation formats
-	pkgver = 3.1.12.1
-	pkgrel = 78
+	pkgver = 3.7.0.1
+	pkgrel = 1
 	url = https://pandoc.org
 	arch = x86_64
 	license = GPL-2.0-or-later
@@ -19,7 +19,7 @@ pkgbase = pandoc-cli
 	provides = pandoc
 	conflicts = pandoc
 	replaces = pandoc
-	source = https://hackage.haskell.org/packages/archive/pandoc-cli/3.1.12.1/pandoc-cli-3.1.12.1.tar.gz
-	sha256sums = 082ae6d88e1df6c0a7c0d60a35d0f63453e41c7e71586a8e86dc3924a6f4cef6
+	source = https://hackage.haskell.org/packages/archive/pandoc-cli/3.7.0.1/pandoc-cli-3.7.0.1.tar.gz
+	sha256sums = 62cfd812ed0e980bb7da2100983bc3842856625c006c3b393f186e297d181754
 
 pkgname = pandoc-cli
