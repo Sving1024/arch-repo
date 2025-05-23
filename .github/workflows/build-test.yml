@@ -1,57 +1,23 @@
-name: BUILD-test-general
+name: build no aur
 
 on:
   workflow_dispatch:
 
 jobs:
   buildAUR:
-    strategy:
-      matrix:
-        repos: [firefox-nightly-i18n-zh-cn]
-
-      fail-fast: false
       
     runs-on: ubuntu-latest
     
     steps:
     - uses: actions/checkout@v4
     
-    - uses: ./build-aur-action
-      with:
-        repo-name: ${{ matrix.repos }}
-        preinstallPkgs: ${{ matrix.preinstall-pkgs }}
+    - name: Makepkg Build and Check (Unmaintained)
+      uses: edlanglois/pkgbuild-action@v1.1.9
+      with: 
+        pkgdir: ./pandoc-cli
     
     - uses: actions/upload-artifact@v4
       with:
         path: ./*/*.pkg.tar.zst
         name: ${{ matrix.repos }}
         if-no-files-found: error
-        
-    - uses: ncipollo/release-action@v1
-      with:
-        allowUpdates: true
-        tag: "packages"
-        artifacts: "./*/*.zst"
-        token: ${{ secrets.GITHUB_TOKEN }}
-          
-  uploadToCloudStorage:      
-    runs-on: ubuntu-latest
-    if: always()
-    needs: [buildAUR]    
-    steps:
-      - uses: actions/checkout@v4
-        with: 
-          ref: refs/heads/dev
-      - uses: actions/download-artifact@v4
-        id: download
-
-      - name: Display structure of downloaded files
-        run: ls -R ${{ steps.download.outputs.download-path }}
-      
-      - uses: ./create-db-and-upload-action
-        with:
-          RCLONE_CONFIG_CONTENT: ${{ secrets.RCLONE_CONFIG }}
-          dest_path: /repo/archlinux/
-          repo_name: archlinux-sving1024
-          gpg-privatekey: ${{ secrets.gpg_private_key }}
-          local_path: ${{ steps.download.outputs.download-path }}

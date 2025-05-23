@@ -1,0 +1,25 @@
+pkgbase = pandoc-cli
+	pkgdesc = Conversion between documentation formats
+	pkgver = 3.1.12.1
+	pkgrel = 78
+	url = https://pandoc.org
+	arch = x86_64
+	license = GPL-2.0-or-later
+	makedepends = ghc
+	makedepends = uusi
+	depends = ghc-libs
+	depends = hslua-cli
+	depends = haskell-pandoc
+	depends = haskell-pandoc-lua-engine
+	depends = haskell-pandoc-server
+	depends = haskell-safe
+	depends = haskell-temporary
+	depends = haskell-wai-extra
+	depends = haskell-warp
+	provides = pandoc
+	conflicts = pandoc
+	replaces = pandoc
+	source = https://hackage.haskell.org/packages/archive/pandoc-cli/3.1.12.1/pandoc-cli-3.1.12.1.tar.gz
+	sha256sums = 082ae6d88e1df6c0a7c0d60a35d0f63453e41c7e71586a8e86dc3924a6f4cef6
+
+pkgname = pandoc-cli
