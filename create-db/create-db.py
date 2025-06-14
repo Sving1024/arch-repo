@@ -127,12 +127,13 @@ if __name__ == "__main__":
             "If you are running this script for the first time, you can ignore this error."
         )
         print(r.stderr.decode())
-        exit(0)
-
-    local_packages = get_pkg_infos(f"/tmp/local_tmp.db.tar.gz")
+        remote_packages = []
+    else:
+        remote_packages = get_pkg_infos(f"/tmp/{REPO_NAME}.db.tar.gz")
+    local_packages = get_pkg_infos("/tmp/local_tmp.db.tar.gz")
 
     rclone_download(f"{REPO_NAME}.db.tar.gz", "/tmp/")
-    remote_packages = get_pkg_infos(f"/tmp/{REPO_NAME}.db.tar.gz")
+    
 
     old_packages = get_old_packages(local_packages, remote_packages)
 

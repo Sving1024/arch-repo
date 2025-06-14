@@ -112,7 +112,9 @@ if __name__ == "__main__":
             "If you are running this script for the first time, you can ignore this error."
         )
         print(r.stderr.decode())
-        exit(0)
+        remote_packages = []
+    else:
+        remote_packages = get_pkg_infos(f"/tmp/{REPO_NAME}.db.tar.gz")
 
     local_packages = get_pkg_infos(f"./{REPO_NAME}.db.tar.gz")
 
