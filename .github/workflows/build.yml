@@ -53,8 +53,8 @@ jobs:
           path: upload_packages
   uploadToRemote:
     strategy:
+      fail-fast: false
       matrix:
-        fail-fast: false
         remote: [onedrive, r2]
     runs-on: ubuntu-latest
     if: always()
