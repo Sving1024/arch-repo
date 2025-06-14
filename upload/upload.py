@@ -114,13 +114,10 @@ if __name__ == "__main__":
         print(r.stderr.decode())
         remote_packages = []
     else:
+        rclone_download(f"{REPO_NAME}.db.tar.gz", "/tmp/")
         remote_packages = get_pkg_infos(f"/tmp/{REPO_NAME}.db.tar.gz")
 
     local_packages = get_pkg_infos(f"./{REPO_NAME}.db.tar.gz")
-
-    rclone_download(f"{REPO_NAME}.db.tar.gz", "/tmp/")
-    remote_packages = get_pkg_infos(f"/tmp/{REPO_NAME}.db.tar.gz")
-
     old_packages = get_old_packages(local_packages, remote_packages)
     for i in old_packages:
         print(f"delete {CONFIG_NAME} {i.filename}")

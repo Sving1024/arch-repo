@@ -54,6 +54,7 @@ jobs:
   uploadToRemote:
     strategy:
       matrix:
+        fail-fast: false
         remote: [onedrive, r2]
     runs-on: ubuntu-latest
     if: always()
