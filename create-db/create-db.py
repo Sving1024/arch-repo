@@ -1,6 +1,7 @@
 #!/usr/bin/python3
 
 import subprocess
+import sys
 import os
 import tarfile
 import shutil
@@ -8,6 +9,7 @@ import glob
 import pyalpm
 from typing import NamedTuple
 from contextlib import suppress
+import pathlib
 
 REPO_NAME = os.environ["repo_name"]
 ROOT_PATH = os.environ["dest_path"]
@@ -55,21 +57,11 @@ def get_pkg_infos(file_path: str) -> list["PkgInfo"]:
             if "%VERSION%" in line:
                 version = lines[index + 1]
 
-        pkg_infos.append(PkgInfo(filename, pkgname, version))
+        pkg_infos.append(PkgInfo(filename=filename, pkgname=pkgname, version=version))
 
     shutil.rmtree("/tmp/extractdb")
 
     return pkg_infos
-
-
-def rclone_delete(name: str):
-    r = subprocess.run(
-        ["rclone", "delete", f"{CONFIG_NAME}/{ROOT_PATH}/{name}"],
-        stdout=subprocess.PIPE,
-        stderr=subprocess.PIPE,
-    )
-    if r.returncode != 0:
-        raise RuntimeError(r.stderr.decode())
 
 
 def rclone_download(name: str, dest_path: str = "./"):
@@ -114,9 +106,16 @@ def download_local_miss_files(
         if r not in local_files and ".db" not in r and ".files" not in r:
             with suppress(RuntimeError):
                 rclone_download(r)
+                rclone_download(r + ".sig")
 
 
 if __name__ == "__main__":
+    for pkg in pathlib.Path().glob("./*.tar.zst"):
+        r = subprocess.run(
+            ["repo-add", "/tmp/local_tmp.db.tar.gz", str(pkg)],
+            stderr=subprocess.PIPE,
+            stdout=subprocess.PIPE,
+        )
     r = subprocess.run(
         ["rclone", "size", f"{CONFIG_NAME}/{ROOT_PATH}/{REPO_NAME}.db.tar.gz"],
         stderr=subprocess.PIPE,
@@ -130,16 +129,31 @@ if __name__ == "__main__":
         print(r.stderr.decode())
         exit(0)
 
-    local_packages = get_pkg_infos(f"./{REPO_NAME}.db.tar.gz")
+    local_packages = get_pkg_infos(f"/tmp/local_tmp.db.tar.gz")
 
     rclone_download(f"{REPO_NAME}.db.tar.gz", "/tmp/")
     remote_packages = get_pkg_infos(f"/tmp/{REPO_NAME}.db.tar.gz")
 
     old_packages = get_old_packages(local_packages, remote_packages)
-    for i in old_packages:
-        print(f"delete {CONFIG_NAME} {i.filename}")
-        rclone_delete(i.filename)
-        with suppress(RuntimeError):
-            rclone_delete(i.filename + ".sig")
 
+    print("::group::Download missing files")
     download_local_miss_files(local_packages, remote_packages, old_packages)
+    print("::endgroup::")
+    print("::group::Signing packages")
+    for pkg in old_packages:
+        for pkg_new in local_packages:
+            if pkg.pkgname == pkg_new.filename:
+                subprocess.run(
+                    ["gpg", "--detach-sig", "--yes", str(pkg_new.filename)],
+                    stderr=sys.stderr.fileno(),
+                    stdout=sys.stdout.fileno(),
+                )
+    print("::endgroup::")
+    print("::group::Adding packages to repo")
+    for pkg in pathlib.Path().glob("./*.tar.zst"):
+                subprocess.run(
+                    ["gpg", "--detach-sig", "--yes", str(pkg)],
+                    stderr=sys.stderr.fileno(),
+                    stdout=sys.stdout.fileno(),
+                )
+    print("::endgroup::")
