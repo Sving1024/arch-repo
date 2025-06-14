@@ -2,6 +2,7 @@
 set -e
 
 init_path=$PWD
+cd upload_packages
 
 echo "$RCLONE_CONFIG_NAME"
 
