@@ -27,28 +27,68 @@ jobs:
         path: ./*/*.pkg.tar.zst
         name: ${{ matrix.repos }}
         if-no-files-found: error
-  uploadToR2:
-    strategy:
-      matrix:
-        remote: [ onedrive, r2 ]
+  create_database:
     runs-on: ubuntu-latest
     if: always()
     needs: [buildAUR]
-
     steps:
       - uses: actions/checkout@v4
-      
+        with:
+          repository: 'Sving1024/arch-repo'
       - uses: actions/download-artifact@v4
         id: download
-
       - name: Display structure of downloaded files
         run: ls -R ${{ steps.download.outputs.download-path }}
-      
-      - uses: ./create-db-and-upload-action
+      - uses: ./create-db
+        with:
+          RCLONE_CONFIG_CONTENT: ${{secrets.RCLONE_CONFIG}}
+          RCLONE_CONFIG_NAME: r2
+          dest_path: /repo/archlinux/
+          repo_name: archlinux-sving1024
+          gpg-privatekey: ${{ secrets.gpg_private_key }}
+          local_path: ${{ steps.download.outputs.download-path }}
+      - uses: actions/upload-artifact@v4
+        with:
+          name: database
+          path: upload_packages
+  uploadToRemote:
+    strategy:
+      matrix:
+        remote: [onedrive, r2]
+    runs-on: ubuntu-latest
+    if: always()
+    needs: [create_database]
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          repository: 'Sving1024/arch-repo'
+      - uses: actions/download-artifact@v4
+        id: download
+        with:
+          name: database
+      - name: Display structure of downloaded files
+        run: ls -R ${{ steps.download.outputs.download-path }}
+      - uses: ./upload
         with:
           RCLONE_CONFIG_CONTENT: ${{secrets.RCLONE_CONFIG}}
           RCLONE_CONFIG_NAME: ${{matrix.remote}}
           dest_path: /repo/archlinux/
           repo_name: archlinux-sving1024
-          gpg-privatekey: ${{ secrets.gpg_private_key }}
           local_path: ${{ steps.download.outputs.download-path }}
+  Release:
+    runs-on: ubuntu-latest
+    if: always()
+    needs: [create_database]
+    steps:
+      - uses: actions/download-artifact@v4
+        with:
+          name: database
+        id: download
+      - name: Display structure of downloaded files
+        run: ls -R ${{ steps.download.outputs.download-path }}
+      - uses: ncipollo/release-action@v1.16.0
+        with:
+          allowUpdates: true
+          tag: "packages"
+          artifacts: "./upload_packages/*.sig,./upload_packages/*.files,./upload_packages/*.db,./upload_packages/*.tar.gz"
+          token: ${{ secrets.GITHUB_TOKEN }}
