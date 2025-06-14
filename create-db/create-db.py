@@ -149,9 +149,8 @@ if __name__ == "__main__":
     print("::endgroup::")
     print("::group::Adding packages to repo")
     for pkg in pathlib.Path().glob("./*.tar.zst"):
-
         subprocess.run(
-            ["gpg", "--detach-sig", "--yes", str(pkg)],
+            ["repo-add", "--verify", "--sign", f"{REPO_NAME}.db.tar.gz", str(pkg)],
             stderr=sys.stderr.fileno(),
             stdout=sys.stdout.fileno(),
         )
