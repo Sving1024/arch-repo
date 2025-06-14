@@ -121,6 +121,7 @@ if __name__ == "__main__":
         stderr=subprocess.PIPE,
         stdout=subprocess.PIPE,
     )
+    remote_packages = None
     if r.returncode != 0 or "Total size: 0" in r.stdout.decode():
         print("Remote database file is not exist!")
         print(
@@ -129,11 +130,9 @@ if __name__ == "__main__":
         print(r.stderr.decode())
         remote_packages = []
     else:
+        rclone_download(f"{REPO_NAME}.db.tar.gz", "/tmp/")
         remote_packages = get_pkg_infos(f"/tmp/{REPO_NAME}.db.tar.gz")
     local_packages = get_pkg_infos("/tmp/local_tmp.db.tar.gz")
-
-    rclone_download(f"{REPO_NAME}.db.tar.gz", "/tmp/")
-    
 
     old_packages = get_old_packages(local_packages, remote_packages)
 
@@ -141,20 +140,19 @@ if __name__ == "__main__":
     download_local_miss_files(local_packages, remote_packages, old_packages)
     print("::endgroup::")
     print("::group::Signing packages")
-    for pkg in old_packages:
-        for pkg_new in local_packages:
-            if pkg.pkgname == pkg_new.filename:
-                subprocess.run(
-                    ["gpg", "--detach-sig", "--yes", str(pkg_new.filename)],
-                    stderr=sys.stderr.fileno(),
-                    stdout=sys.stdout.fileno(),
-                )
+    for pkg in local_packages:
+        subprocess.run(
+            ["gpg", "--detach-sig", "--yes", str(pkg.filename)],
+            stderr=sys.stderr.fileno(),
+            stdout=sys.stdout.fileno(),
+        )
     print("::endgroup::")
     print("::group::Adding packages to repo")
     for pkg in pathlib.Path().glob("./*.tar.zst"):
-                subprocess.run(
-                    ["gpg", "--detach-sig", "--yes", str(pkg)],
-                    stderr=sys.stderr.fileno(),
-                    stdout=sys.stdout.fileno(),
-                )
+
+        subprocess.run(
+            ["gpg", "--detach-sig", "--yes", str(pkg)],
+            stderr=sys.stderr.fileno(),
+            stdout=sys.stdout.fileno(),
+        )
     print("::endgroup::")
