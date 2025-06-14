@@ -1,7 +1,11 @@
 #!/bin/bash
 set -e
 
-init_path=$(cd "$(dirname $0)";pwd)
+init_path=$PWD
+mkdir upload_packages
+find $local_path -type f -name "*.tar.zst" -exec cp {} ./upload_packages/ \;
+find $local_path -type f -name "*.tar.gz" -exec cp {} ./upload_packages/ \;
+find $local_path -type f -name "*.sig" -exec cp {} ./upload_packages/ \;
 
 echo "$RCLONE_CONFIG_NAME"
 
