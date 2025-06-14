@@ -13,5 +13,5 @@ if [ ! -f ~/.config/rclone/rclone.conf ]; then
 fi
 
 echo "::group::Uploading to remote"
-python3 $init_path/create-db-and-upload-action/upload.py 
+python3 $init_path/upload/upload.py 
 echo "::endgroup::"
