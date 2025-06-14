@@ -1,10 +1,7 @@
 #!/bin/bash
 set -e
 
-init_path=$(
-    cd "$(dirname $0)"
-    pwd
-)
+init_path=$(cd "$(dirname $0)";pwd)
 
 echo "$RCLONE_CONFIG_NAME"
 
