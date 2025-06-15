@@ -14,6 +14,8 @@ if [ ! -f ~/.config/rclone/rclone.conf ]; then
     echo "$RCLONE_CONFIG_CONTENT" >>~/.config/rclone/rclone.conf
 fi
 
+cd upload_packages
+
 echo "::group::Uploading to remote"
 python3 $init_path/upload/upload.py
 echo "::endgroup::"
