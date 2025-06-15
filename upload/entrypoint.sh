@@ -6,6 +6,8 @@ mkdir upload_packages
 find $local_path -type f -name "*.tar.zst" -exec cp {} ./upload_packages/ \;
 find $local_path -type f -name "*.tar.gz" -exec cp {} ./upload_packages/ \;
 find $local_path -type f -name "*.sig" -exec cp {} ./upload_packages/ \;
+find $local_path -type f -name "*.db" -exec cp {} ./upload_packages/ \;
+find $local_path -type f -name "*.files" -exec cp {} ./upload_packages/ \;
 
 echo "$RCLONE_CONFIG_NAME"
 
