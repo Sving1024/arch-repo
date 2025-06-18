@@ -19,7 +19,7 @@ if ROOT_PATH.startswith("/"):
 
 if __name__ == "__main__":
     r = subprocess.run(
-        ["rclone", "sync", "./", f"{CONFIG_NAME}/{ROOT_PATH}/{REPO_NAME}.db.tar.gz"],
+        ["rclone", "sync", "./", f"{CONFIG_NAME}/{ROOT_PATH}"],
         stderr=sys.stderr.fileno(),
         stdout=sys.stdout.fileno(),
     )
