@@ -10,7 +10,7 @@ jobs:
         repos: [
           python-accesser,
           python-cyaron,
-          python-xeger,
+          python-xeger-bin,
           python-dnsstamps
         ]
       fail-fast: false
