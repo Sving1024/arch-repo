@@ -8,7 +8,8 @@ jobs:
     strategy:
       matrix:
         repos: [
-          python-dnsstamps
+          python-accesser,
+          python-cyaron-git
         ]
       fail-fast: false
       
