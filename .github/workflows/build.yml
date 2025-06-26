@@ -9,7 +9,9 @@ jobs:
       matrix:
         repos: [
           python-accesser,
-          python-cyaron-git
+          python-cyaron,
+          python-xeger,
+          python-dnsstamps
         ]
       fail-fast: false
       
