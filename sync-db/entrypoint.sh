@@ -1,7 +1,7 @@
 #!/bin/bash
 set -e
 
-ls -l ${HOME}
+ls -laZ ${HOME}
 gpgconf --kill all
 ls -l /github/home/ || true
 
