@@ -1,7 +1,7 @@
 #!/bin/bash
 set -e
 
-ls -l ~/
+ls -l ${HOME}
 gpgconf --kill all
 echo "::group::Importing GPG key"
 if [ ! -z "$gpg_key" ]; then
