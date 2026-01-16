@@ -1,9 +1,9 @@
 #!/bin/bash
 set -e
 
-ls -laZ ${HOME}
-gpgconf --kill all
-ls -laZ /github/home/ || true
+if [[ -d ${HOME}/.gnupg ]]; then
+    rm -rf ${HOME}/.gnupg
+fi
 
 echo "::group::Importing GPG key"
 if [ ! -z "$gpg_key" ]; then
