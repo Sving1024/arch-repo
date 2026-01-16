@@ -3,7 +3,7 @@ set -e
 
 ls -laZ ${HOME}
 gpgconf --kill all
-ls -l /github/home/ || true
+ls -laZ /github/home/ || true
 
 echo "::group::Importing GPG key"
 if [ ! -z "$gpg_key" ]; then
