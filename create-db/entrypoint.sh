@@ -15,7 +15,7 @@ echo "allow-loopback-pinentry" > ~/.gnupg/gpg-agent.conf
 
 echo "::group::Importing GPG key"
 if [ ! -z "$gpg_key" ]; then
-    echo "$gpg_key" | gpg --import --verbose
+    echo "$gpg_key" | gpg --batch --import --verbose --debug-all
 fi
 echo "::endgroup::"
 
