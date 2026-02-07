@@ -9,7 +9,7 @@ fi
 
 echo "::group::Importing GPG key"
 if [ ! -z "$gpg_key" ]; then
-    echo "$gpg_key" | gpg --import
+    echo "$gpg_key" | gpg --import --verbose
 fi
 echo "::endgroup::"
 
