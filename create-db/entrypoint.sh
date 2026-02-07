@@ -3,11 +3,16 @@ set -e
 
 init_path=$PWD
 
-gpgconf --kill gpg-agent
+mkdir -p ~/.gnupg
+chmod 700 ~/.gnupg
+
+echo "pinentry-mode loopback" > ~/.gnupg/gpg.conf
+echo "allow-loopback-pinentry" > ~/.gnupg/gpg-agent.conf
+
+
 if [[ -d ${HOME}/.gnupg ]]; then
     rm -rf ${HOME}/.gnupg
 fi
-gpgconf --launch gpg-agent
 
 echo "::group::Importing GPG key"
 if [ ! -z "$gpg_key" ]; then
