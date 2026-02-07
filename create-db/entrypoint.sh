@@ -3,9 +3,11 @@ set -e
 
 init_path=$PWD
 
+gpgconf --kill gpg-agent
 if [[ -d ${HOME}/.gnupg ]]; then
     rm -rf ${HOME}/.gnupg
 fi
+gpgconf --launch gpg-agent
 
 echo "::group::Importing GPG key"
 if [ ! -z "$gpg_key" ]; then
