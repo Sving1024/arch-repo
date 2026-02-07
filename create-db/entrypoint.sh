@@ -8,7 +8,7 @@ if [ ! -z "$gpg_key" ]; then
     if [[ -d ${HOME}/.gnupg ]]; then
         rm -rf ${HOME}/.gnupg
     fi
-    echo "$gpg_key" | gpg --import
+    echo "$gpg_key" | gpg --import --batch
 fi
 echo "::endgroup::"
 
